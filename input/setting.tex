@@ -1,0 +1,34 @@
+
+\usepackage{docmute}
+\usepackage{braket}%ブラケット関係のやつ
+\usepackage[dvipdfmx]{graphicx}%画像関係のやつ
+\usepackage[dvipdfmx]{color}
+\usepackage{here}%よくわからん
+\usepackage{bm}%ベクトル関係のやつ
+\usepackage{amsmath} %数学関係のやつ
+\usepackage{listings} %プログラムソースのinclude
+\usepackage{color}
+% \usepackage{scalefnt}
+ 
+\lstset{ 
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true, 
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+} %listingsの設定
+
+\numberwithin{equation}{section} %上手い式の数振り
+\setcounter{tocdepth}{3} %subsubsectionまで目次に表示
+

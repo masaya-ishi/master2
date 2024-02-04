@@ -1,0 +1,332 @@
+\documentclass[a4paper,11pt,titlepage]{jsarticle}
+
+\input{setting.tex}
+
+\begin{document}
+\section{粒子シミュレーションの基礎理論}
+  \subsection{粒子コードEPIC3Dの概要と特徴}
+  プラズマの運動を解析するには、現在流体モデルと運動論モデルの2種類の手法が存在する。
+  前者は、局所的にプラズマが熱平衡状態であると仮定した上でMHD方程式を解くことにより巨視的振る舞いを観測するモデルである。
+  これに対し、後者は荷電粒子によって生じる電磁場と各粒子にはたらく電磁場の力を計算し非平衡状態で起こる現象を再現するモデルである。
+  このモデルでは、プラズマ振動数とデバイ長を空間ならびに時間を基準として使用するため、微小時間ごとのプラズマの微視的解析を行うことが可能である。
+  しかし、粒子ごとに計算を行うため、粒子数や系の大きさ等に比例し必要な計算資源や計算時間が多くなるという欠点がある。
+  これはPIC法と呼ばれる、多数の粒子の電荷と質量をまとめた超粒子という概念を想定することで補うことが可能である。
+  ただこの概念を取り入れた場合においても、1000 以上もの超粒子を多体問題として扱うと膨大な量のクーロン力の計算が必要となる。
+  そこでデバイ遮蔽というプラズマ特有の現象を利用し、計算量を削減する。デバイ長$\lambda_D$は
+  \begin{equation}
+    \label{3-1-1}
+    \lambda_D = \sqrt{\frac{k_B T}{4\pi n e^2}}
+  \end{equation}
+  で表される。このデバイ長を半径に持つデバイ球外部では個々の荷電粒子により作り出される電場は
+  他の荷電粒子が分極し遮蔽するので、値としては$\frac{1}{e}$以下となる。よって、デバイ球内部でのクーロン力の分布は
+  プラズマの巨視的な振る舞いに関係せず、この場合は無視することが可能である。そのため、場については空間メッシュの格子点上でのみ定義することで
+  Poisson方程式により計算する。デバイ遮蔽を再現するためには、空間メッシュをデバイ長と同程度にとる必要がある。
+  そうすることで、粒子が受ける力とその力が起因となる運動も格子点上で与えられた電場から計算することが可能である。
+  この一連の計算を繰り返すことで超粒子の概念の効果もあわせて計算量を大幅に減らすことが可能でありこれらを踏まえた方法でシミュレーションを実行した。
+
+  \subsection{物理量の規格化}
+  一般に長さや時間などの物理長には単位が存在するが、この単位を持つ物理量をそのまま用いてシミュレーションを行った場合、丸め誤差が増える恐れがある。\\
+  そこで、数値シミュレーションでは物理量を、同じ次元のある値で割ることで、丸め誤差が増えることを避ける。
+  このことを規格化という。この値は基礎方程式に従う必要がある。そこで、本研究では使用した各物理量を規格化した際の手順および規格化定数について記述する。
+  また、各物理量の単位はCGS-Gauss 系である。\\
+  \subsubsection{長さ}
+  まず長さについて記述を行う。長さは系や媒質の大きさだけでなく、速度、密度などの次元に
+  含まれる基本的な量である。シミュレーションで再現する実空間での長さを
+  それぞれ$l_x,l_y,l_z$とする。これらは実空間の長さの次元を持つ。はじめに、
+  これらの長さを$L_x,L_y,L_z$とし、計算機内における単位長さを
+  \begin{equation}
+    \label{eq:3-2-1}
+    \Delta = \frac{l_x}{L_x}
+  \end{equation}
+  と定義する。シミュレーションにおけるパラメータ設定はx方向のスケールを基準に行われ、
+  $l_x,L_x$を入力することで、それに基づいた$\Delta$が定まり、と同様に$l_y,l_z$を規格化することで
+  計算機内での設定値$L_y,L_z$が算出される。その場合の$L_x,L_y,L_z$は
+  \begin{equation}
+    \label{eq:3-2-2}
+    L_y=\frac{l_y}{\Delta}
+  \end{equation}
+  \begin{equation}
+    \label{eq:3-2-3}
+    L_z=\frac{l_z}{\Delta}
+  \end{equation}
+  の式によって計算される。\\
+  \subsubsection{光速と時間}
+  長さを規格化したので、次に長さの次元を含む光速を規格化したものを定義し、これによって時間の規格化を行う。
+  そのために、まずは規格化されたプラズマ周波数$\tilde \omega_p$を求める。規格化された光速を$\tilde c$として、
+  \begin{equation}
+    \label{eq:3-2-4}
+    \tilde \omega_p = \frac{c}{\tilde c}
+  \end{equation}
+  と表す。この場合、$\tilde c$ の値を決定する必要があり、本シミュレーションにおいて
+  $\tilde c=10$として計算を行う。この規格化プラズマ周波数を用いれば規格化された時間
+  $\tilde t$は
+  \begin{equation}
+    \label{eq:3-2-5}
+    \tilde t=\frac{1}{\tilde \omega}
+  \end{equation}
+  と表される。また、と同様に規格化された粒子の速度は
+  \begin{equation}
+    \label{eq:3-2-6}
+    \tilde v=\frac{v}{\Delta \omega_p}
+  \end{equation}
+  と表される。\\
+
+  \subsubsection{質量と密度}
+  次に質量と密度に関する規格化を行う。質量の規格化の基準として電子の質量を使用して
+  \begin{equation}
+    \label{eq:3-2-7}
+    \tilde m=\frac{m}{m_e}
+  \end{equation}
+  と表す。また、プラズマ周波数$\omega_p$は
+  \begin{equation}
+    \label{eq:3-2-8}
+    \omega_p=\sqrt{\frac{4\pi n e^2}{m}}
+  \end{equation}
+  であるから、この式を変形し、すでに求めた$\tilde m,\tilde \omega_p$を用いると
+  \begin{equation}
+    \label{eq:3-2-9}
+    \tilde n= (\frac{\tilde m}{4\pi e^2})\tilde \omega_p
+  \end{equation}
+  となる。\\
+
+  \subsubsection{電磁場}
+  続いて電磁場の規格化について考える。これらはいずれも電子の運動方程式(\ref{2-})をもとに計算する。
+  電子の電磁場中における運動方程式は
+  \begin{equation}
+    \label{eq:3-2-10}
+    m \frac{d\bm{v}}{dt}=e(\textit{\textbf{E}}+
+    \frac{\textit{\textbf{v}}}{c} \times \textit{\textbf{B}})
+  \end{equation}
+  であり、電荷の規格化因子を電子の電荷eで行った場合、規格化を考慮に入れると
+  \begin{equation}
+    \label{eq:3-2-11}
+    m \frac{ d \tilde{\bm{v}} }{ dt } 
+    = e ( \tilde{\bm{E}} + \frac{ \tilde{\bm{v}} }{c} \times \bm{\tilde{B}} )
+  \end{equation}
+  と表される。ここで(\ref{eq:3-2-10})のそれぞれの物理量の規格化の基準を$\bar m$のように表せば
+  \begin{equation}
+    \label{eq:3-2-12}
+    {\bar m}{\tilde m}\frac{d(\Delta {\bar {\omega_p}} {\tilde v})}
+    {d(\frac{1}{\bar {\omega_p}} \tilde t)}
+    =e {\bar E} {\tilde E} + \frac{\Delta {\bar{\omega_p}}{\tilde v}}
+    {\Delta {\bar{\omega_p}}{\tilde c}} \times e {\bar B}{\tilde B}
+  \end{equation}
+  となり、これを整理することで
+  \begin{equation}
+    \label{eq:3-2-13}
+    \tilde{m} \frac{ d \tilde{v} }{ d \tilde{t} }
+    = (\frac{e\bar E}{{\bar m} \Delta {\bar \omega_p}^2}){\tilde E} 
+    + (\frac {e \bar{B} }{ \bar{m} \Delta \bar{\omega_p}^2}) 
+    \frac{ \tilde{ \bm{v} } }{ \bm{c} } \times \tilde{ \bm{B} } 
+  \end{equation}
+  となる。(\ref{eq:3-2-11})、(\ref{eq:3-2-13})の$\tilde{\bm{E}}$ならびに
+  $\tilde{\bm{B}}$の係数を比較すると電磁場の規格化定数は
+  \begin{align}
+    \label{eq:3-2-14}
+    \bar E =&\frac{\bar m \Delta \bar \omega_p^2}{e}\\  
+    \label{eq:3-2-15}
+    \bar B =&\frac{\bar m \Delta \bar \omega_p^2}{e}  
+  \end{align}
+  となって、電場・磁場ともに等しくなる。さらに(\ref{eq:3-2-8})を変形した
+  \begin{equation}
+    \label{eq:3-2-16}
+    \bar \omega_p^2 = \frac{4 \pi e^2 \bar n}{\bar m}
+  \end{equation}
+  この式を(\ref{eq:3-2-14})に代入することで
+  \begin{equation}
+    \label{eq:3-2-17}
+    \bar E = \bar B = 4\pi e \Delta \bar n
+  \end{equation}
+  となる。これが電磁場の規格化となる。\\
+
+  \subsubsection{レーザー強度}
+  最後にレーザー強度の規格化について行う。電子の運動方程式(\ref{})は
+  \begin{equation}
+    \label{eq:3-2-18}
+    \frac{dp}{dt}=-eE_0 \sin ( \omega t )  
+  \end{equation}
+  であり、初速0の初期条件の下でこれを解くと、運動量は
+  \begin{equation}
+    \label{eq:3-2-19}
+    p=\frac{eE_0}{\omega} \cos (\omega t)
+  \end{equation}
+  ここで、この運動量の最大強度を電子の運動量$m_e c$で割った値を規格化強度$a_0$と定義する。
+  \begin{equation}
+    \label{eq:3-2-20}
+    a_0 = \frac{e E_0}{m_e c \omega}
+  \end{equation}
+  これは、電子の速度が光速に近づくと$a_0$は1になることを表す。更に$E_0$について解き
+  $\omega = \frac{2\pi c}{\lambda}$を代入することで
+  \begin{equation}
+    \label{eq:3-2-21}
+    E_0 = \frac{2\pi a_0 mc^2}{e\lambda}
+  \end{equation}
+  が得られる。この式を(\ref{})に代入すると
+  \begin{equation}
+    \label{eq:3-2-22}
+    I=\frac{c}{8\pi} \left(\frac{2\pi a_0 m c^2}{e\lambda}\right)^2 \times 10^{-7}
+  \end{equation}
+  となる。これが規格化されたレーザー強度である。これは$a_0$について解くと
+  \begin{equation}
+    \label{eq:3-2-23}
+    a_0 = \left( \frac{2\times 10^7 e^2}{\pi m^2 c^5}\right) ^{\frac{1}{2}} I^{\frac{1}{2}}\lambda
+  \end{equation}
+  となる。
+
+
+  \subsection{エネルギー保存則}
+  粒子シミュレーションのような孤立系においては、エネルギー保存則を適用することができる。
+  これは、シミュレーションが物理過程を正しく反映しているか確認するという観点から重要な式と言える。
+  以下では、マクスウェル方程式よりエネルギー密度方程式を導出し、
+  それを用いることでエネルギー保存則の導出を行う。
+
+  マクスウェル方程式より、
+  \begin{equation}
+    \label{eq:3-3-1}
+    \textit{\textbf{j}} = rot \textbf{\textit{H}} - \frac{\partial \textit{\textbf{D}} }{\partial t} 
+  \end{equation}
+
+  \begin{equation}
+    \label{eq:3-3-2}
+    rot \textit{\textbf{E}} = - \frac{\partial \textit{\textbf{B}} }{\partial t} 
+  \end{equation}
+  (\ref{eq:3-3-1})と(\ref{eq:3-3-2})にそれぞれ$\textbf{\textit{E}}$と$\textbf{\textit{B}}$との内積を取ると、
+  \begin{equation}
+    \label{eq:3-3-3}
+    \textit{\textbf{E}} \cdot \textit{\textbf{j}} = \textit{\textbf{E}} \cdot rot \textit{\textbf{H}} - 
+    \textit{\textbf{E}} \cdot \frac{\partial \textit{\textbf{D}} }{\partial t} - \textit{\textbf{H}} \cdot rot \textit{\textbf{E}}
+    - \textit{\textbf{H}} \cdot \frac{\partial \textit{\textbf{B}} }{\partial t}
+  \end{equation}
+  $div( \textit{\textbf{E}} \times \textit{\textbf{H}} ) = 
+  \textit{\textbf{H}} \cdot rot \textit{\textbf{E}} -
+  \textit{\textbf{E}} \cdot rot \textit{\textbf{H}} $より、(\ref{eq:3-3-3})は
+  \begin{equation}
+    \label{eq:3-3-4}
+    - \textit{\textbf{E}} \cdot \textit{\textbf{j}} =  
+    \textit{\textbf{E}} \cdot \frac{\partial \textit{\textbf{D}} }{\partial t} 
+    + \textit{\textbf{H}} \cdot \frac{\partial \textit{\textbf{B}} }{\partial t}
+    + div( \textit{\textbf{E}} \times \textit{\textbf{H}} )
+  \end{equation}
+  と変形できる。ここで、右辺の第１項、第２項について電磁波のエネルギーを$U_F$とすると
+  \begin{equation}
+    \label{eq:3-3-5}  
+    \textit{\textbf{E}} \cdot \frac{\partial \textit{\textbf{D}} }{\partial t} 
+    + \textit{\textbf{H}} \cdot \frac{\partial \textit{\textbf{B}} }{\partial t} =
+    \frac{\partial}{\partial t } (\frac{1}{2}\epsilon_0 E^2 + \frac{1}{2} \mu_0 H^2) =
+    \frac{\partial U_F }{\partial t } 
+  \end{equation}
+  ポインティングベクトルを
+  \begin{equation}
+    \label{eq:3-3-6}
+    \textit{\textbf{S}} = \textit{\textbf{E}} \times \textit{\textbf{H}} 
+  \end{equation}
+  をすると(\ref{eq:3-3-4})は結局
+  \begin{equation}
+    \label{eq:3-3-7}
+    - \textit{\textbf{E}} \cdot \textit{\textbf{j}} =  
+    \frac{\partial U_F }{\partial t }    
+    + \bm{\nabla} \cdot \textit{\textbf{S}} 
+  \end{equation}
+  と書き直すことができる。
+  この式をエネルギー密度方程式と呼ぶ。
+  系の体積を$V$として体積平均を考えると
+  \begin{equation}
+    \label{eq:3-3-8}
+     - \frac{1}{V} \int_V \textit{\textbf{E}} \cdot \textit{\textbf{j}} \: d\bm{V} 
+     = \frac{1}{V} \int_V \frac{\partial U_F }{\partial t } \: d\bm{V}
+     + \frac{1}{V} \int_V \bm{\nabla} \cdot \textit{\textbf{S}} \: d\bm{V}
+  \end{equation}
+%   ここで電流$\bm{j}$を粒子系の電流$\bm{j}_p$と、系内に入力するアンテナ電流$\bm{j}_a$に分けて
+%   \begin{equation}
+%     \label{eq:31}
+%     \bm{j} = \bm{j}_p + \bm{j}_a 
+%   \end{equation}
+%   特に粒子系の電流について
+  ただし、ここで電流$\bm{j}$を粒子系の電流$\bm{j}_p$と外部から入力するアンテナ電流$\bm{j}_\alpha$に分けると、
+  粒子系の電流について
+  \begin{equation}
+    \label{eq:3-3-9}
+    \bm{j_p} = \Sigma_\sigma \Sigma_j^{N_\sigma} q_{\sigma j} \bm{v}_{\sigma j}\delta(\bm{r}-\bm{r}_{\sigma j})
+  \end{equation}
+  ここで$\sigma$は粒子種、$N$は粒子数、$q$は粒子の電荷、$v$は粒子の速度である。
+  また、粒子の従う運動方程式(\ref{eq:2-})より、外部磁場の存在しない系において、エネルギー方程式は
+  \begin{equation}
+    \label{eq:3-3-10}
+      \frac{\partial}{\partial t} \Sigma_\sigma \Sigma_j^{N_\sigma} ( \bm{r}_{\sigma j} m_{\sigma j} c^2 ) 
+      = \Sigma_\sigma \Sigma_j^{N_\sigma} q_{\sigma j} \bm{v}_{\sigma j} \bm{E}(\bm{r}_{\sigma j})
+  \end{equation}
+  このとき、
+  \begin{align}
+    \label{eq:3-3-11}
+    \nonumber
+    \int_V \bm{E} \cdot \bm{j_p} \: d\bm{V}  &= \int_V \Sigma_\sigma \Sigma_j^{N_\sigma} q_{\sigma j} \bm{v}_{\sigma j}\delta(\bm{r}-\bm{r}_{\sigma j}) \bm{E}(\bm{r}_{\sigma j})\: d\bm{V} \\
+    \nonumber
+          &= \Sigma_\sigma \Sigma_j^{N_\sigma} q_{\sigma j} \bm{v}_{\sigma j} \bm{E}(\bm{r}_{\sigma j})  \\
+    &= \frac{\partial}{\partial t} \Sigma_\sigma \Sigma_j^{N_\sigma} ( \bm{r}_{\sigma j} m_{\sigma j} c^2 )
+  \end{align}
+  すなわち、(\ref{eq:3-3-8})は
+  \begin{equation}
+    \label{eq:3-3-12}
+    - \frac{\partial}{\partial t} \left( \frac{1}{V} \Sigma_\sigma \Sigma_j^{N_\sigma} ( \bm{r}_{\sigma j} m_{\sigma j} c^2 ) 
+    + \frac{1}{V} \int_V U_F \: d\bm{r}  \right) - \frac{1}{V} \int_V \bm{E} \cdot \bm{j_\alpha} \: d\bm{r} 
+    = \frac{1}{V} \int_V \bm{\nabla} \cdot \bm{S} \: d\bm{V}
+  \end{equation}
+  左辺第１項は、まさに全粒子の運動エネルギーそのものを表しており、電子とイオンで分けると
+  \begin{equation}
+    \label{eq:3-3-13}
+      \braket{U_K} = \frac{1}{V} \Sigma_\sigma \Sigma_j^{N_\sigma} ( \bm{r}_{\sigma j} m_{\sigma j} c^2 )
+      = \braket{U_{Ki}} + \braket{U_{Ke}} 
+  \end{equation}
+  また、同様に各項をブラケット表記で表すと、電磁場のエネルギーは
+  \begin{equation}
+    \label{eq:3-3-14}
+     \braket{U_F} = \frac{1}{V} \int_V U_F \: d\bm{r}
+  \end{equation}
+  系内に入力するアンテナエネルギーは
+  \begin{equation}
+    \label{eq:3-3-15}
+     \braket{W_A} = - \frac{1}{V} \int_V \bm{E} \cdot \bm{j_\alpha} \: d\bm{r}
+  \end{equation}
+  系外に流出するポインティングエネルギーは
+  \begin{align}
+    \label{eq:3-3-16}
+    \nonumber
+      \braket{W_P} &= \frac{1}{V} \int_V \bm{\nabla} \cdot \bm{S} \: d\bm{V} \\
+      &= \frac{1}{V} \int_D \bm{S} \cdot \bm{n} \: dD
+  \end{align}
+  ただし、ここでガウスの発散定理を用いた。$\bm{n}$は閉局面$D$に垂直な単位法線ベクトルである。
+  まとめると、(\ref{eq:3-3-12})式は結局
+  \begin{equation}
+    \label{eq:3-3-17}
+    - \frac{\partial}{\partial t} \left( \braket{U_K} + \braket{U_F} \right) + \braket{W_A} = \braket{W_P}
+  \end{equation}
+  と書き表すことが出来る。(\ref{eq:3-3-17})をシミュレーション終端時間まで積分するとエネルギー保存則は以下のように定まる。
+  \begin{equation}
+    \label{eq:3-3-18}
+      \left( \braket{U_K(t)} - \braket{U_K(0)} 
+      +  \braket{U_F(t)} - \braket{U_F(0)} \right) - \int_0^t \braket{W_A} \: dt 
+      = - \int_0^t \braket{W_P} \: dt
+  \end{equation}
+
+  EPIC3Dでは、シミュレーション空間の境界端に、アンテナエネルギーを球面波として入力しており、
+  そのうちの半分は物質と相互作用することなく系外へと抜けていく。(\ref{eq:3-3-18})を以下のように変形する。
+  \begin{equation}
+    \label{eq:3-3-19}
+      \left( \braket{U_K(t)} - \braket{U_K(0)} 
+      +  \braket{U_F(t)} - \braket{U_F(0)} \right) - \frac{1}{2} \int_0^t \braket{W_A} \: dt 
+      = - \int_0^t \braket{W_P} \: dt + \frac{1}{2} \int_0^t \braket{W_A} \: dt
+  \end{equation}
+  左辺の$\frac{1}{2} \int_0^t \braket{W_A} \: dt$は
+  系内に入力される実効的なアンテナエネルギーを示しており、右辺は実効的なポインティングエネルギーである。
+ここで、相対誤差は
+\begin{equation}
+  \label{eq:3-3-20}
+    \frac{ \left( \braket{U_K(t)} - \braket{U_K(0)} 
+    +  \braket{U_F(t)} - \braket{U_F(0)} \right) - \frac{1}{2} \int_0^t \braket{W_A} \: dt 
+    + \int_0^t \braket{W_P} \: dt - \frac{1}{2} \int_0^t \braket{W_A} \: dt }
+    { \frac{1}{2} \int_0^t \braket{W_A} \: dt + \braket{U_K(0)} + \braket{U_F(0)} }
+\end{equation}
+のように表され、シミュレーションで見られた物理現象の正当性を確かめる1つの指標となる。
+  \newpage
+\end{document}
+

@@ -553,6 +553,9 @@ INPUT c:/texlive1/2022/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm
 INPUT out/master.toc
 INPUT out/master.toc
 INPUT out/master.toc
+OUTPUT out/master.toc
+INPUT c:/texlive1/2022/texmf-dist/fonts/tfm/adobe/times/ptmr7t.tfm
+INPUT c:/texlive1/2022/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm
 INPUT c:/texlive1/2022/texmf-dist/fonts/tfm/ptex-fonts/standard/tgoth10.tfm
 INPUT c:/texlive1/2022/texmf-dist/fonts/tfm/ptex-fonts/standard/goth10.tfm
 INPUT c:/texlive1/2022/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm
@@ -601,9 +604,6 @@ INPUT c:/texlive1/2022/texmf-dist/tex/latex/jknapltx/ursfs.fd
 INPUT c:/texlive1/2022/texmf-dist/fonts/tfm/public/rsfs/rsfs10.tfm
 INPUT c:/texlive1/2022/texmf-dist/fonts/tfm/public/rsfs/rsfs10.tfm
 INPUT c:/texlive1/2022/texmf-dist/fonts/tfm/public/rsfs/rsfs5.tfm
-OUTPUT out/master.toc
-INPUT c:/texlive1/2022/texmf-dist/fonts/tfm/adobe/times/ptmr7t.tfm
-INPUT c:/texlive1/2022/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm
 INPUT ./image/1-laser.png
 INPUT ./image/1-laser.png
 INPUT ./image/1-laser.png
@@ -758,4 +758,3 @@ INPUT ./image/4-25-10rod.png
 INPUT ./image/4-25-10rod.png
 INPUT ./image/4-25-10rod.png
 INPUT extractbb -B cropbox -O ./image/4-25-10rod.png
-INPUT out/master.aux

@@ -1,0 +1,29 @@
+# Fdb version 4
+["dvipdf"] 0 "out/1.dvi" "out/1.pdf" "out/1" 0 -1
+  "out/1.dvi" 0 -1 0 "latex"
+  (generated)
+  "out/1.pdf"
+  (rewritten before read)
+["latex"] 1687365824 "c:/Users/masay/修士論文/input/1.tex" "out/1.dvi" "1" 1687365825 2
+  "1.tex" 1687365823 8469 c33fd6c0890aec924b441781c85b2032 ""
+  "c:/Users/masay/修士論文/input/1.tex" 1687365823 8469 c33fd6c0890aec924b441781c85b2032 ""
+  "c:/texlive1/2022/texmf-dist/fonts/map/fontname/texfonts.map" 1678073465 3524 cb3e574dea2d1052e39280babc910dc8 ""
+  "c:/texlive1/2022/texmf-dist/fonts/tfm/ptex-fonts/jis/jis.tfm" 1678076369 468 53f854284f6afa6c36aaa2d1090ecc12 ""
+  "c:/texlive1/2022/texmf-dist/fonts/tfm/ptex-fonts/standard/tmin10.tfm" 1678076369 856 39c171483fe1bb7d0e1368980c0c205b ""
+  "c:/texlive1/2022/texmf-dist/fonts/tfm/public/cm/cmr8.tfm" 1678072467 1292 21c1c5bfeaebccffdb478fd231a0997d ""
+  "c:/texlive1/2022/texmf-dist/tex/latex/graphics-cfg/color.cfg" 1678073696 1213 620bba36b25224fa9b7e1ccb4ecb76fd ""
+  "c:/texlive1/2022/texmf-dist/tex/latex/graphics-def/dvips.def" 1678073697 6282 3d1fff8973f8803fd81ea577dda4f3ef ""
+  "c:/texlive1/2022/texmf-dist/tex/latex/graphics/color.sty" 1678073695 7233 e46ce9241d2b2ca2a78155475fdd557a ""
+  "c:/texlive1/2022/texmf-dist/tex/latex/graphics/dvipsnam.def" 1678073695 5009 d242512eef244b70f2fc3fde14419206 ""
+  "c:/texlive1/2022/texmf-dist/tex/latex/graphics/mathcolor.ltx" 1678073695 2885 9c645d672ae17285bba324998918efd8 ""
+  "c:/texlive1/2022/texmf-dist/tex/platex/jsclasses/jsarticle.cls" 1678074132 61387 1c16fa09f9aa344f6b7ed4a7e2c399b2 ""
+  "c:/texlive1/2022/texmf-dist/tex/platex/jsclasses/jslogo.sty" 1678074132 5585 8e4615c54073c390d14154b29cee89cb ""
+  "c:/texlive1/2022/texmf-dist/web2c/texmf.cnf" 1678071481 40171 cdab547de63d26590bebb3baff566530 ""
+  "c:/texlive1/2022/texmf-var/web2c/eptex/platex.fmt" 1678078603 7883179 fc20c4651d798ce76cf9a6e81a778eee ""
+  "c:/texlive1/2022/texmf.cnf" 1678078358 713 e69b156964470283e0530f5060668171 ""
+  "out/1.aux" 1687365393 34 3985256e7290058c681f74d7a3565a19 "latex"
+  (generated)
+  "out/1.aux"
+  "out/1.dvi"
+  "out/1.log"
+  (rewritten before read)

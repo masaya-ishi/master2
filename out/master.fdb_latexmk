@@ -1,11 +1,11 @@
 # Fdb version 4
 ["dvipdf"] 1707066990 "out/master.dvi" "out/master.pdf" "out/master" 1707067018 0
-  "out/master.dvi" 1707066989 196144 8c9ce969ba99bb2dc41c7d5681de9801 "latex"
+  "out/master.dvi" 1707067641 166632 3e014813e8c896cbf3d90c4ffd40b6d6 "latex"
   (generated)
   "out/master.pdf"
   (rewritten before read)
-["latex"] 1707066969 "c:/plasma/master2/master.tex" "out/master.dvi" "master" 1707067018 0
-  "c:/plasma/master2/master.tex" 1707066927 120846 79528cc06f4e1e07924bc9c18fd5ad35 ""
+["latex"] 1707067621 "c:/plasma/master2/master.tex" "out/master.dvi" "master" 1707067641 2
+  "c:/plasma/master2/master.tex" 1707067615 120878 18440bfd031df578b69683f66035c047 ""
   "c:/texlive1/2022/texmf-dist/fonts/map/fontname/texfonts.map" 1678073465 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive1/2022/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1678077536 2172 fd0c924230362ff848a33632ed45dc23 ""
   "c:/texlive1/2022/texmf-dist/fonts/tfm/adobe/times/ptmbi7t.tfm" 1678077536 2228 e564491c42a4540b5ebb710a75ff306c ""
@@ -144,9 +144,9 @@
   "image/4-6-2rod.png" 1703439718 752696 e85bfc79ffcb27565189da66c93b8cda ""
   "image/4-7-2rod_dynamics.png" 1707062880 39871 ed128a42e344d97458cc08e83d700a33 ""
   "image/4-9-10rod.png" 1703477516 374610 9ce6665f6dda4d87b47ca7df43b629bb ""
-  "master.tex" 1707066927 120846 79528cc06f4e1e07924bc9c18fd5ad35 ""
-  "out/master.aux" 1707066989 24940 793f1df7d0d58871ed81e440b8cc69e1 "latex"
-  "out/master.toc" 1707066989 4429 fc54692dbad61cd68e8eeec147306567 "latex"
+  "master.tex" 1707067615 120878 18440bfd031df578b69683f66035c047 ""
+  "out/master.aux" 1707067641 23499 ddf23161ac822b4d13e90308fe4467b3 "latex"
+  "out/master.toc" 1707067622 0 d41d8cd98f00b204e9800998ecf8427e "latex"
   (generated)
   "out/master.aux"
   "out/master.dvi"
